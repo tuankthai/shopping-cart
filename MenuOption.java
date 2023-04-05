@@ -35,6 +35,11 @@ public enum MenuOption {
         return this.id;
     }
 
+    /**
+     * menuOptionFromOptionId() converts an integer option into a Menu Option object
+     * @param optionId the integer option
+     * @return MenuOption the matching Menu Option object
+     */
     public static MenuOption menuOptionFromOptionId(int optionId) {
         for (MenuOption option : MenuOption.values()) {
             if (option.id == optionId) {

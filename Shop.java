@@ -30,7 +30,8 @@ public class Shop {
     public void printProducts() {
         String line;
         for (Product product : products) {
-            line = String.format("product id: %d, name: %s, price: %f%n", product.id, product.name, product.price);
+            line = String.format("product id: %d, name: %s, price: %f%n", 
+            product.getId(), product.getName(), product.getPrice());
             System.out.println(line);
         }
 
@@ -44,8 +45,8 @@ public class Shop {
      */
     public int findProduct(String searchName) {
         for (Product product : products) {
-            if (product.name.equals(searchName) ) {
-                return product.id;
+            if (product.getName().equals(searchName) ) {
+                return product.getId();
             }
         }
         return -1;
@@ -58,7 +59,7 @@ public class Shop {
      */
     public Product getProductById(int id) {
         for (Product product : products) {
-            if (product.id == id) {
+            if (product.getId() == id) {
                 return product;
             }
         }
