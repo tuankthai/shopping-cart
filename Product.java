@@ -1,5 +1,4 @@
-
-ackage shopping_cart;
+package shopping_cart;
 
 public class Product {
     private int id;

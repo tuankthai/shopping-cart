@@ -5,12 +5,12 @@ import java.util.Scanner;
 public class Menu {
     private Scanner scanner;
     private Shop shop;
-    private Cart cart;
-
+    private ShopList cart;
+   
     public Menu(Scanner scannerIn, Shop shop) {
         this.scanner = scannerIn;
         this.shop = shop;
-        this.cart = new Cart();
+        this.cart = new ShopList();
     }
 
     /**
@@ -95,13 +95,21 @@ public class Menu {
     
     private void addToCart() {
 
-        System.out.println("Please product id: " );
+        System.out.println("Please enter product id: " );
         int productId = getNextIntFromUser();
         String line = String.format("%s %d", "you want to buy product id ", productId);
         System.out.println(line);
         
-        cart.addToCart(shop.getProductById(productId) );
+        Product product = shop.getProductById(productId);
+        if (product != null) {
+            cart.addItem(product);
+       
+        } else {
+            line = String.format("%s %d %s", "Sorry, the product id ", productId, " you entered is not valid.");
+            System.out.println(line);
 
+        }
+    
     }
     
 
@@ -114,15 +122,17 @@ public class Menu {
             if (option == MenuOption.LIST_PRODUCTS) {
                 shop.printProducts();
 
-            } else if (option == MenuOption.BUY_PRODUCT) {
+            } else if (option == MenuOption.BUY_PRODUCT) {   
                 addToCart();
 
             } else if (option == MenuOption.FIND_PRODUCT) {
                 findProduct();
 
             } else if (option == MenuOption.SHOW_CART) {
+                cart.showDetails();
 
             } else if (option == MenuOption.CHECKOUT) {
+                cart.checkOut();
 
             }
 
