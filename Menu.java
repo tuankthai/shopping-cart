@@ -5,10 +5,12 @@ import java.util.Scanner;
 public class Menu {
     private Scanner scanner;
     private Shop shop;
+    private Cart cart;
 
     public Menu(Scanner scannerIn, Shop shop) {
         this.scanner = scannerIn;
         this.shop = shop;
+        this.cart = new Cart();
     }
 
     /**
@@ -41,53 +43,88 @@ public class Menu {
         return (scanner.nextLine());
     }
 
-    /**
-     * executeMenu() lists menu options and execute menu option typed by user
-     */
+    private MenuOption getNextOptionFromUser() {
+        int selected = getNextIntFromUser();
+        return(MenuOption.menuOptionFromOptionId(selected));    
+    }
+
+
     public void executeMenu() {
         printMenu();
-        int selected = getNextIntFromUser();
-        MenuOption option = MenuOption.menuOptionFromOptionId(selected);
+
+        MenuOption option = getNextOptionFromUser();
         while (option != MenuOption.EXIT) {
             String line = String.format("you selected option: %s%n", option.getDisplayValue());
             System.out.println(line);
 
+            handleShopperMenuOptionSelection(option);
+
+            printMenu();
+            option = getNextOptionFromUser();
+        }
+        exit();
+    }
+
+    private void exit() {
+        scanner.close();
+    }
+
+    private void findProduct() {
+        String line;
+
+        System.out.println("Please enter your product name:");
+        line = getNextStringLineFromUser();
+
+        System.out.println("You entered product name: " + line);
+
+        int productId = shop.findProduct(line);
+        System.out.println("the product id of " + line + ": " + productId);
+
+        if (productId != -1) {
+            Product product = shop.getProductById(productId);
+
+            line = String.format("Product Id: %d, name: %s, price: %f%n",
+                    product.getId(), product.getName(), product.getPrice());
+            System.out.println(line);
+
+        } else {
+            System.out.println("Sorry, we cannot find your product.");
+        }
+        
+    }
+    
+    private void addToCart() {
+
+        System.out.println("Please product id: " );
+        int productId = getNextIntFromUser();
+        String line = String.format("%s %d", "you want to buy product id ", productId);
+        System.out.println(line);
+        
+        cart.addToCart(shop.getProductById(productId) );
+
+    }
+    
+
+    /**
+     * 
+     * executeMenu() lists menu options and execute menu option typed by user
+     */
+    private void handleShopperMenuOptionSelection(MenuOption option) {
+    
             if (option == MenuOption.LIST_PRODUCTS) {
                 shop.printProducts();
 
             } else if (option == MenuOption.BUY_PRODUCT) {
+                addToCart();
 
             } else if (option == MenuOption.FIND_PRODUCT) {
-
-                System.out.println("Please your product name:");
-                line = getNextStringLineFromUser();
-
-                System.out.println("You entered product name: " + line);
-
-                int productId = shop.findProduct(line);
-                System.out.println("the product id of " + line + ": " + productId);
-
-                if (productId != -1) {
-                    Product product = shop.getProductById(productId);
-
-                    line = String.format("Product Id: %d, name: %s, price: %f%n",
-                            product.getId(), product.getName(), product.getPrice());
-                    System.out.println(line);
-
-                } else {
-                    System.out.println("Sorry, we cannot find your product.");
-                }
+                findProduct();
 
             } else if (option == MenuOption.SHOW_CART) {
 
             } else if (option == MenuOption.CHECKOUT) {
 
             }
-
-            printMenu();
-            selected = getNextIntFromUser();
-            option = MenuOption.menuOptionFromOptionId(selected);
-        }
 
     }
 
@@ -106,3 +143,5 @@ public class Menu {
         System.out.println(wholeMenu.toString());
     }
 }
+
+
